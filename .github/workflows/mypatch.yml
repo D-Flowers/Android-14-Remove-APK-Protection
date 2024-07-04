@@ -1,0 +1,54 @@
+name: vsteam_framework_patch
+
+on:
+  workflow_dispatch:
+    inputs:
+     F:
+      description: 'framework.jar Url'
+      default: ''
+     S:
+      description: 'services.jar Url'
+      default: ''
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+       - name: Checkout
+         uses: actions/checkout@v2
+       
+       - name: Setting up
+         run: |
+            sudo apt-get install -y git wget zip unzip axel python3-pip zipalign apksigner xmlstarlet
+            pip3 install ConfigObj
+  
+       - name: Set up Time 
+         run: |
+            cd $GITHUB_WORKSPACE
+            echo "Setting Vienam timezone"
+            sudo timedatectl set-timezone Asia/Ho_Chi_Minh
+      
+       - name: Download Framework and Services dir
+         run: |
+
+            mkdir img_temp
+
+            [[ "${{ github.event.inputs.F }}" ]] && axel -n $(nproc) ${{ github.event.inputs.F }} -o img_temp/
+            [[ "${{ github.event.inputs.S }}" ]] && axel -n $(nproc) ${{ github.event.inputs.S }} -o img_temp/
+            
+            if [[ -z "${{ github.event.inputs.F }}" && -z "${{ github.event.inputs.S }}" ]]; then
+              exit 1
+            fi
+
+
+       - name : Proccesing 
+         run: |
+            sudo chmod 777 -R *
+            ./bhlnk.sh
+       - name: Upload a Build Artifact
+         uses: actions/upload-artifact@v3.1.1
+         with:
+          # Artifact name
+           name: framework_U_patch_${{ github.actor }}.zip
+           path: ./module/*
+      
