@@ -33,8 +33,8 @@ jobs:
 
             mkdir img_temp
 
-            [[ "${{ github.event.inputs.F }}" ]] && axel -n $(nproc) ${{ github.event.inputs.F }} -o img_temp/
-            [[ "${{ github.event.inputs.S }}" ]] && axel -n $(nproc) ${{ github.event.inputs.S }} -o img_temp/
+            [[ "${{ github.event.inputs.F }}" ]] && axel -n $(nproc) ${{ github.event.inputs.F }}  img_temp/
+            [[ "${{ github.event.inputs.S }}" ]] && axel -n $(nproc) ${{ github.event.inputs.S }}  img_temp/
             
             if [[ -z "${{ github.event.inputs.F }}" && -z "${{ github.event.inputs.S }}" ]]; then
               exit 1
