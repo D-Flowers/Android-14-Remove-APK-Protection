@@ -1,4 +1,4 @@
-name: vsteam_framework_patch
+name: usteam_framework_patch
 
 on:
   workflow_dispatch:
